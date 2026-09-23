@@ -36,3 +36,18 @@ __pycache__/
 CLAUDE.md
 .claude
 .wolf
+
+# --- VXRC host additions -------------------------------------------------
+# Independent repositories cloned inside this project (see the VXRC repo's
+# docs/development-setup.md). The host must not track them.
+/Basis/Assets/VXRC-Research/
+/Basis/Assets/VXRC-Research.meta
+/Basis/Packages/com.yabadabahaba.vxrc/
+
+# Poiyomi Pro: a paid Patreon download, installed once per PC.
+/Basis/Assets/_PoiyomiShaders/
+/Basis/Assets/_PoiyomiShaders.meta
+/Basis/Poi/
+
+# Written by the in-editor Basis server at runtime.
+/Basis/permissions.xml
