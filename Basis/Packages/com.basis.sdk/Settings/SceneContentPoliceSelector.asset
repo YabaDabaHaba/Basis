@@ -387,3 +387,34 @@ MonoBehaviour:
   - BakeryPackAsSingleSquare
   - BakerySharedLodUv
   - Basis.Shims.BasisActionTrigger
+  - SeatCalibrationn
+  - uLipSyncInformationUI
+  - uLipSync.Samples.AudioListPlayer
+  - uLipSync.Samples.RuntimeAudioClipPlayer
+  - uLipSyncPhonemeUI
+  - uLipSyncProfileUI
+  - uLipSync.uLipSync
+  - uLipSync.uLipSyncAnimator
+  - uLipSync.uLipSyncAudioSource
+  - uLipSync.uLipSyncBakedDataPlayer
+  - uLipSync.uLipSyncBlendShape
+  - uLipSync.uLipSyncCalibrationAudioPlayer
+  - uLipSync.uLipSyncMicrophone
+  - uLipSync.uLipSyncTexture
+  - uLipSync.Timeline.uLipSyncTimelineEvent
+  - uLipSync.Debugging.DebugAudioPlayer
+  - uLipSync.Debugging.DebugDump
+  - uLipSync.uLipSyncAnimatorToggle
+  - uLipSync.CalibrationByKeyboardInput
+  - uLipSyncBlendShapeRuntimeSetupExample
+  - uLipSyncBlendShapeVRMRuntimeSetupExample
+  - uLipSyncExpressionVRMRuntimeSetupExample
+  - uLipSync.uLipSyncBlendShapeVRM
+  - uLipSync.uLipSyncExpressionVRM
+  - NPCCompanionManager
+  - CompanionAudioManager
+  - AnimationTrigger
+  - TVVideoManager
+  - CustomisationManager
+  - GazeLogger
+  - GazeTarget
