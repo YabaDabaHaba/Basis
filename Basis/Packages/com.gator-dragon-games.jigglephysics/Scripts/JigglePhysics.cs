@@ -382,11 +382,28 @@ public static class JigglePhysics {
         while (current.parent != null) {
             current = current.parent;
             if (jiggleRootLookup.TryGetValue(current, out var jiggleTreeSegment)) {
+                // A rig on a branch the rig above leaves out stands alone, as a PhysBone's ignored transform does:
+                // merged, the rig above would never visit it, so it would not move at all.
+                if (IsBranchExcluded(jiggleTreeSegment.jiggleRigData, t, current)) {
+                    break;
+                }
                 parentJiggleTreeSegment = jiggleTreeSegment;
                 return true;
             }
         }
         parentJiggleTreeSegment = null;
+        return false;
+    }
+
+    private static bool IsBranchExcluded(JiggleRigData rig, Transform t, Transform rigRoot) {
+        if (rig.excludedTransforms == null || rig.excludedTransforms.Length == 0) {
+            return false;
+        }
+        for (var current = t; current != null && current != rigRoot; current = current.parent) {
+            if (rig.GetIsExcluded(current)) {
+                return true;
+            }
+        }
         return false;
     }
     
