@@ -34,6 +34,13 @@ namespace Basis.OpenXR
         /// <summary>True once the runtime reported the passthrough extension enabled this session.</summary>
         public static bool IsSupported { get; private set; }
 
+        /// <summary>
+        /// Hand the projection layer's colour to the compositor as premultiplied by its alpha, as URP draws it over the
+        /// transparent clear (opaque pixels, MSAA edges, alpha-blended and additive effects alike). False keeps the
+        /// unpremultiplied blend, in which additive glows (alpha 0) vanish and see-through pixels darken.
+        /// </summary>
+        public static bool PremultipliedAlpha { get; set; }
+
         const uint XR_TYPE_PASSTHROUGH_CREATE_INFO_FB = 1000118001;
         const uint XR_TYPE_PASSTHROUGH_LAYER_CREATE_INFO_FB = 1000118002;
         const uint XR_TYPE_COMPOSITION_LAYER_PASSTHROUGH_FB = 1000118003;
@@ -41,7 +48,6 @@ namespace Basis.OpenXR
         const uint XR_PASSTHROUGH_LAYER_PURPOSE_RECONSTRUCTION_FB = 0;
         const long XR_COMPOSITION_LAYER_BLEND_TEXTURE_SOURCE_ALPHA_BIT = 0x00000002;
         const long XR_COMPOSITION_LAYER_UNPREMULTIPLIED_ALPHA_BIT = 0x00000004;
-        const long PROJECTION_ALPHA_FLAGS = XR_COMPOSITION_LAYER_BLEND_TEXTURE_SOURCE_ALPHA_BIT | XR_COMPOSITION_LAYER_UNPREMULTIPLIED_ALPHA_BIT;
         const int LAYER_FLAGS_OFFSET = 16;
         const int XR_SESSION_STATE_FOCUSED = 5;
 
@@ -271,6 +277,14 @@ namespace Basis.OpenXR
             s_LayersPtr = Marshal.AllocHGlobal(IntPtr.Size * s_LayersCapacity);
         }
 
+        static long ProjectionAlphaFlags(long flags)
+        {
+            flags |= XR_COMPOSITION_LAYER_BLEND_TEXTURE_SOURCE_ALPHA_BIT;
+            return PremultipliedAlpha
+                ? flags & ~XR_COMPOSITION_LAYER_UNPREMULTIPLIED_ALPHA_BIT
+                : flags | XR_COMPOSITION_LAYER_UNPREMULTIPLIED_ALPHA_BIT;
+        }
+
         /// <summary>Starts/resumes or pauses passthrough and toggles the per-frame underlay submission.</summary>
         public static void SetActive(bool on)
         {
@@ -320,7 +334,7 @@ namespace Basis.OpenXR
                 if (layerPtr != IntPtr.Zero && (uint)Marshal.ReadInt32(layerPtr, 0) == XR_TYPE_COMPOSITION_LAYER_PROJECTION)
                 {
                     long flags = Marshal.ReadInt64(layerPtr, LAYER_FLAGS_OFFSET);
-                    Marshal.WriteInt64(layerPtr, LAYER_FLAGS_OFFSET, flags | PROJECTION_ALPHA_FLAGS);
+                    Marshal.WriteInt64(layerPtr, LAYER_FLAGS_OFFSET, ProjectionAlphaFlags(flags));
                 }
                 Marshal.WriteIntPtr(s_LayersPtr, (i + 1) * IntPtr.Size, layerPtr);
             }
