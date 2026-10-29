@@ -73,6 +73,9 @@ public class BasisOpenXRHandInput : BasisInputController
         InitializeTracking(UniqueID, UnUniqueID, subSystems, AssignTrackedRole, basisBoneTrackedRole, true);
         string devicePath = basisBoneTrackedRole == BasisBoneTrackedRole.LeftHand ? "<XRController>{LeftHand}" : "<XRController>{RightHand}";
         string devicePosePath = basisBoneTrackedRole == BasisBoneTrackedRole.LeftHand ? "<PalmPose>{LeftHand}" : "<PalmPose>{RightHand}";
+        // With hand tracking the runtime reports the hand as the Hand Interaction Profile's device, which has
+        // no trigger or grip: its aim activation (the index pinch) presses and its grasp grips.
+        string handInteractionPath = basisBoneTrackedRole == BasisBoneTrackedRole.LeftHand ? "<HandInteraction>{LeftHand}" : "<HandInteraction>{RightHand}";
 
         if (string.IsNullOrEmpty(devicePath))
         {
@@ -81,6 +84,8 @@ public class BasisOpenXRHandInput : BasisInputController
         }
         Trigger = new InputActionProperty(new InputAction(devicePath + "/trigger", InputActionType.Value, devicePath + "/trigger", expectedControlType: "Float"));
         Grip = new InputActionProperty(new InputAction(devicePath + "/grip", InputActionType.Value, devicePath + "/grip", expectedControlType: "Float"));
+        Trigger.action.AddBinding(handInteractionPath + "/pointerActivateValue");
+        Grip.action.AddBinding(handInteractionPath + "/graspValue");
         PrimaryButton = new InputActionProperty(new InputAction(devicePath + "/primaryButton", InputActionType.Button, devicePath + "/primaryButton", expectedControlType: "Button"));
         SecondaryButton = new InputActionProperty(new InputAction(devicePath + "/secondaryButton", InputActionType.Button, devicePath + "/secondaryButton", expectedControlType: "Button"));
         MenuButton = new InputActionProperty(new InputAction(devicePath + "/menuButton", InputActionType.Button, devicePath + "/menuButton", expectedControlType: "Button"));
